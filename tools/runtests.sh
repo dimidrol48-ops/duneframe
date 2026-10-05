@@ -90,7 +90,7 @@ sweep_wide() {
     python3 tools/lockstep_sweep.py $T/wide_orig/rom.gen $T/wide_c/rom.gen $T/wide_c/dune2.elf
 }
 
-QUICK="build layout regouts equiv variants grouptest grouptest_w"
+QUICK="build layout regouts equiv variants grouptest grouptest_w modpatch"
 FULL="$QUICK snaptest sweep_base sweep_wide sweep_mod crash"
 ALL="$FULL shift med"
 declare -A CMD=(
@@ -98,6 +98,7 @@ declare -A CMD=(
     [equiv]="python3 tools/ctest/equiv.py" [variants]=variants
     [grouptest]="python3 tools/grouptest.py"
     [grouptest_w]="python3 tools/grouptest.py $T/wide_mod/rom.gen $T/wide_mod/dune2.elf"
+    [modpatch]="python3 tools/test_modpatch.py"
     [snaptest]=snaptest [sweep_base]=sweep_base [sweep_wide]=sweep_wide [sweep_mod]=sweep_mod
     [crash]=crash [shift]="python3 tools/shiftsuite.py" [med]=med
 )
