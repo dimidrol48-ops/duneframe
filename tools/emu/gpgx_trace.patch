@@ -1,0 +1,1145 @@
+diff --git a/core/m68k/m68kcpu.c b/core/m68k/m68kcpu.c
+index 07d2514..e25dc50 100644
+--- a/core/m68k/m68kcpu.c
++++ b/core/m68k/m68kcpu.c
+@@ -1,414 +1,455 @@
+-/* ======================================================================== */
+-/*                            MAIN 68K CORE                                 */
+-/* ======================================================================== */
+-
+-extern int vdp_68k_irq_ack(int int_level);
+-
+-#define m68ki_cpu m68k
+-#define MUL (7)
+-
+-/* ======================================================================== */
+-/* ================================ INCLUDES ============================== */
+-/* ======================================================================== */
+-
+-#ifndef BUILD_TABLES
+-#include "m68ki_cycles.h"
+-#endif
+-
+-#include "m68kconf.h"
+-#include "m68kcpu.h"
+-#include "m68kops.h"
+-
+-/* ======================================================================== */
+-/* ================================= DATA ================================= */
+-/* ======================================================================== */
+-
+-#ifdef BUILD_TABLES
+-static unsigned char m68ki_cycles[0x10000];
+-#endif
+-
+-static int irq_latency;
+-
+-m68ki_cpu_core m68k;
+-
+-
+-/* ======================================================================== */
+-/* =============================== CALLBACKS ============================== */
+-/* ======================================================================== */
+-
+-/* Default callbacks used if the callback hasn't been set yet, or if the
+- * callback is set to NULL
+- */
+-
+-#if M68K_EMULATE_INT_ACK == OPT_ON
+-/* Interrupt acknowledge */
+-static int default_int_ack_callback(int int_level)
+-{
+-  CPU_INT_LEVEL = 0;
+-  return M68K_INT_ACK_AUTOVECTOR;
+-}
+-#endif
+-
+-#if M68K_EMULATE_RESET == OPT_ON
+-/* Called when a reset instruction is executed */
+-static void default_reset_instr_callback(void)
+-{
+-}
+-#endif
+-
+-#if M68K_TAS_HAS_CALLBACK == OPT_ON
+-/* Called when a tas instruction is executed */
+-static int default_tas_instr_callback(void)
+-{
+-  return 1; // allow writeback
+-}
+-#endif
+-
+-#if M68K_EMULATE_FC == OPT_ON
+-/* Called every time there's bus activity (read/write to/from memory */
+-static void default_set_fc_callback(unsigned int new_fc)
+-{
+-}
+-#endif
+-
+-
+-/* ======================================================================== */
+-/* ================================= API ================================== */
+-/* ======================================================================== */
+-
+-/* Access the internals of the CPU */
+-unsigned int m68k_get_reg(m68k_register_t regnum)
+-{
+-  switch(regnum)
+-  {
+-    case M68K_REG_D0:  return m68ki_cpu.dar[0];
+-    case M68K_REG_D1:  return m68ki_cpu.dar[1];
+-    case M68K_REG_D2:  return m68ki_cpu.dar[2];
+-    case M68K_REG_D3:  return m68ki_cpu.dar[3];
+-    case M68K_REG_D4:  return m68ki_cpu.dar[4];
+-    case M68K_REG_D5:  return m68ki_cpu.dar[5];
+-    case M68K_REG_D6:  return m68ki_cpu.dar[6];
+-    case M68K_REG_D7:  return m68ki_cpu.dar[7];
+-    case M68K_REG_A0:  return m68ki_cpu.dar[8];
+-    case M68K_REG_A1:  return m68ki_cpu.dar[9];
+-    case M68K_REG_A2:  return m68ki_cpu.dar[10];
+-    case M68K_REG_A3:  return m68ki_cpu.dar[11];
+-    case M68K_REG_A4:  return m68ki_cpu.dar[12];
+-    case M68K_REG_A5:  return m68ki_cpu.dar[13];
+-    case M68K_REG_A6:  return m68ki_cpu.dar[14];
+-    case M68K_REG_A7:  return m68ki_cpu.dar[15];
+-    case M68K_REG_PC:  return MASK_OUT_ABOVE_32(m68ki_cpu.pc);
+-    case M68K_REG_SR:  return  m68ki_cpu.t1_flag        |
+-                  (m68ki_cpu.s_flag << 11)              |
+-                   m68ki_cpu.int_mask                   |
+-                  ((m68ki_cpu.x_flag & XFLAG_SET) >> 4) |
+-                  ((m68ki_cpu.n_flag & NFLAG_SET) >> 4) |
+-                  ((!m68ki_cpu.not_z_flag) << 2)        |
+-                  ((m68ki_cpu.v_flag & VFLAG_SET) >> 6) |
+-                  ((m68ki_cpu.c_flag & CFLAG_SET) >> 8);
+-    case M68K_REG_SP:  return m68ki_cpu.dar[15];
+-    case M68K_REG_USP:  return m68ki_cpu.s_flag ? m68ki_cpu.sp[0] : m68ki_cpu.dar[15];
+-    case M68K_REG_ISP:  return m68ki_cpu.s_flag ? m68ki_cpu.dar[15] : m68ki_cpu.sp[4];
+-#if M68K_EMULATE_PREFETCH
+-    case M68K_REG_PREF_ADDR:  return m68ki_cpu.pref_addr;
+-    case M68K_REG_PREF_DATA:  return m68ki_cpu.pref_data;
+-#endif
+-    case M68K_REG_IR:  return m68ki_cpu.ir;
+-    default:      return 0;
+-  }
+-}
+-
+-void m68k_set_reg(m68k_register_t regnum, unsigned int value)
+-{
+-  switch(regnum)
+-  {
+-    case M68K_REG_D0:  REG_D[0] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D1:  REG_D[1] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D2:  REG_D[2] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D3:  REG_D[3] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D4:  REG_D[4] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D5:  REG_D[5] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D6:  REG_D[6] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_D7:  REG_D[7] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A0:  REG_A[0] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A1:  REG_A[1] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A2:  REG_A[2] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A3:  REG_A[3] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A4:  REG_A[4] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A5:  REG_A[5] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A6:  REG_A[6] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_A7:  REG_A[7] = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_PC:  m68ki_jump(MASK_OUT_ABOVE_32(value)); return;
+-    case M68K_REG_SR:  m68ki_set_sr(value); return;
+-    case M68K_REG_SP:  REG_SP = MASK_OUT_ABOVE_32(value); return;
+-    case M68K_REG_USP:  if(FLAG_S)
+-                REG_USP = MASK_OUT_ABOVE_32(value);
+-              else
+-                REG_SP = MASK_OUT_ABOVE_32(value);
+-              return;
+-    case M68K_REG_ISP:  if(FLAG_S)
+-                REG_SP = MASK_OUT_ABOVE_32(value);
+-              else
+-                REG_ISP = MASK_OUT_ABOVE_32(value);
+-              return;
+-    case M68K_REG_IR:  REG_IR = MASK_OUT_ABOVE_16(value); return;
+-#if M68K_EMULATE_PREFETCH
+-    case M68K_REG_PREF_ADDR:  CPU_PREF_ADDR = MASK_OUT_ABOVE_32(value); return;
+-#endif
+-    default:      return;
+-  }
+-}
+-
+-/* Set the callbacks */
+-#if M68K_EMULATE_INT_ACK == OPT_ON
+-void m68k_set_int_ack_callback(int  (*callback)(int int_level))
+-{
+-  CALLBACK_INT_ACK = callback ? callback : default_int_ack_callback;
+-}
+-#endif
+-
+-#if M68K_EMULATE_RESET == OPT_ON
+-void m68k_set_reset_instr_callback(void  (*callback)(void))
+-{
+-  CALLBACK_RESET_INSTR = callback ? callback : default_reset_instr_callback;
+-}
+-#endif
+-
+-#if M68K_TAS_HAS_CALLBACK == OPT_ON
+-void m68k_set_tas_instr_callback(int  (*callback)(void))
+-{
+-  CALLBACK_TAS_INSTR = callback ? callback : default_tas_instr_callback;
+-}
+-#endif
+-
+-#if M68K_EMULATE_FC == OPT_ON
+-void m68k_set_fc_callback(void  (*callback)(unsigned int new_fc))
+-{
+-  CALLBACK_SET_FC = callback ? callback : default_set_fc_callback;
+-}
+-#endif
+-
+-#ifdef LOGERROR
+-
+-extern void error(char *format, ...);
+-extern uint16 v_counter;
+-#endif
+-
+-/* ASG: rewrote so that the int_level is a mask of the IPL0/IPL1/IPL2 bits */
+-/* KS: Modified so that IPL* bits match with mask positions in the SR
+- *     and cleaned out remenants of the interrupt controller.
+- */
+-void m68k_update_irq(unsigned int mask)
+-{
+-  /* Update IRQ level */
+-  CPU_INT_LEVEL |= (mask << 8);
+-  
+-#ifdef LOGERROR
+-  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
+-#endif
+-}
+-
+-void m68k_set_irq(unsigned int int_level)
+-{
+-  /* Set IRQ level */
+-  CPU_INT_LEVEL = int_level << 8;
+-  
+-#ifdef LOGERROR
+-  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
+-#endif
+-}
+-
+-/* IRQ latency (Fatal Rewind, Sesame's Street Counting Cafe)*/
+-void m68k_set_irq_delay(unsigned int int_level)
+-{
+-  /* Prevent reentrance */
+-  if (!irq_latency)
+-  {
+-    /* This is always triggered from MOVE instructions (VDP CTRL port write) */
+-    /* We just make sure this is not a MOVE.L instruction as we could be in */
+-    /* the middle of its execution (first memory write).                   */
+-    if ((REG_IR & 0xF000) != 0x2000)
+-    {
+-      /* Finish executing current instruction */
+-      USE_CYCLES(CYC_INSTRUCTION[REG_IR]);
+-
+-      /* One instruction delay before interrupt */
+-      irq_latency = 1;
+-      m68ki_trace_t1() /* auto-disable (see m68kcpu.h) */
+-      m68ki_use_data_space() /* auto-disable (see m68kcpu.h) */
+-      REG_IR = m68ki_read_imm_16();
+-      m68ki_instruction_jump_table[REG_IR]();
+-      m68ki_exception_if_trace() /* auto-disable (see m68kcpu.h) */
+-      irq_latency = 0;
+-    }
+-
+-    /* Set IRQ level */
+-    CPU_INT_LEVEL = int_level << 8;
+-  }
+-  
+-#ifdef LOGERROR
+-  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
+-#endif
+-
+-  /* Check interrupt mask to process IRQ  */
+-  m68ki_check_interrupts(); /* Level triggered (IRQ) */
+-}
+-
+-void m68k_run(unsigned int cycles) 
+-{
+-  /* Make sure CPU is not already ahead */
+-  if (m68k.cycles >= cycles)
+-  {
+-    return;
+-  }
+-
+-  /* Check interrupt mask to process IRQ if needed */
+-  m68ki_check_interrupts();
+-
+-  /* Make sure we're not stopped */
+-  if (CPU_STOPPED)
+-  {
+-    m68k.cycles = cycles;
+-    return;
+-  }
+-
+-  /* Set aimed cycle count for current CPU execution frame */
+-  m68k.cycle_end = cycles;
+-
+-  /* Return point for when we have an address error (TODO: use goto) */
+-  m68ki_set_address_error_trap() /* auto-disable (see m68kcpu.h) */
+-
+-#ifdef LOGERROR
+-  error("[%d][%d] m68k run to %d cycles (%x), irq mask = %x (%x)\n", v_counter, m68k.cycles, cycles, m68k.pc,FLAG_INT_MASK, CPU_INT_LEVEL);
+-#endif
+-
+-  while (m68k.cycles < cycles)
+-  {
+-    /* Set tracing according to T1. */
+-    m68ki_trace_t1() /* auto-disable (see m68kcpu.h) */
+-
+-    /* Set the address space for reads */
+-    m68ki_use_data_space() /* auto-disable (see m68kcpu.h) */
+-
+-#ifdef HOOK_CPU
+-    /* Trigger execution hook */
+-    if (UNLIKELY(cpu_hook))
+-      cpu_hook(HOOK_M68K_E, 0, REG_PC, 0);
+-#endif
+-
+-    /* Decode next instruction */
+-    REG_IR = m68ki_read_imm_16();
+-
+-    /* 68K bus access refresh delay (Mega Drive / Genesis specific) */
+-    if (m68k.cycles >= m68k.refresh_cycles)
+-    {
+-      m68k.refresh_cycles = m68k.cycles + (128*7);
+-      m68k.cycles += (2*7);
+-    }
+-
+-    /* Execute instruction */
+-    m68ki_instruction_jump_table[REG_IR]();
+-    USE_CYCLES(CYC_INSTRUCTION[REG_IR]);
+-
+-    /* Trace m68k_exception, if necessary */
+-    m68ki_exception_if_trace(); /* auto-disable (see m68kcpu.h) */
+-  }
+-
+-  /* Reset aimed cycle count to indicate end of CPU execution frame */
+-  m68k.cycle_end = 0;
+-}
+-
+-int m68k_cycles(void)
+-{
+-  return CYC_INSTRUCTION[REG_IR];
+-}
+-
+-void m68k_init(void)
+-{
+-#ifdef BUILD_TABLES
+-  static uint emulation_initialized = 0;
+-
+-  /* The first call to this function initializes the opcode handler jump table */
+-  if(!emulation_initialized)
+-  {
+-    m68ki_build_opcode_table();
+-    emulation_initialized = 1;
+-  }
+-#endif
+-
+-#ifdef M68K_OVERCLOCK_SHIFT
+-  m68k.cycle_ratio = 1 << M68K_OVERCLOCK_SHIFT;
+-#endif
+-
+-#if M68K_EMULATE_INT_ACK == OPT_ON
+-  m68k_set_int_ack_callback(NULL);
+-#endif
+-#if M68K_EMULATE_RESET == OPT_ON
+-  m68k_set_reset_instr_callback(NULL);
+-#endif
+-#if M68K_TAS_HAS_CALLBACK == OPT_ON
+-  m68k_set_tas_instr_callback(NULL);
+-#endif
+-#if M68K_EMULATE_FC == OPT_ON
+-  m68k_set_fc_callback(NULL);
+-#endif
+-}
+-
+-/* Pulse the RESET line on the CPU */
+-void m68k_pulse_reset(void)
+-{
+-  /* Clear all stop levels */
+-  CPU_STOPPED = 0;
+-#if M68K_EMULATE_ADDRESS_ERROR
+-  CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
+-#endif
+-
+-  /* Turn off tracing */
+-  FLAG_T1 = 0;
+-  m68ki_clear_trace()
+-
+-  /* Interrupt mask to level 7 */
+-  FLAG_INT_MASK = 0x0700;
+-  CPU_INT_LEVEL = 0;
+-  irq_latency = 0;
+-
+-  /* Go to supervisor mode */
+-  m68ki_set_s_flag(SFLAG_SET);
+-
+-  /* Invalidate the prefetch queue */
+-#if M68K_EMULATE_PREFETCH
+-  /* Set to arbitrary number since our first fetch is from 0 */
+-  CPU_PREF_ADDR = 0x1000;
+-#endif /* M68K_EMULATE_PREFETCH */
+-
+-  /* Read the initial stack pointer and program counter */
+-  m68ki_jump(0);
+-  REG_SP = m68ki_read_imm_32();
+-  REG_PC = m68ki_read_imm_32();
+-  m68ki_jump(REG_PC);
+-
+-#if M68K_EMULATE_ADDRESS_ERROR
+-  CPU_RUN_MODE = RUN_MODE_NORMAL;
+-#endif
+-
+-  USE_CYCLES(CYC_EXCEPTION[EXCEPTION_RESET]);
+-
+-  /* Synchronize 68k bus refresh mechanism (Mega Drive / Genesis specific) */
+-  m68k.refresh_cycles = ((m68k.cycles / (128*7)) * (128*7)) + 128*7;
+-}
+-
+-void m68k_pulse_halt(void)
+-{
+-  /* Pulse the HALT line on the CPU */
+-  CPU_STOPPED |= STOP_LEVEL_HALT;
+-}
+-
+-void m68k_clear_halt(void)
+-{
+-  /* Clear the HALT line on the CPU */
+-  CPU_STOPPED &= ~STOP_LEVEL_HALT;
+-}
+-
+-/* ======================================================================== */
+-/* ============================== END OF FILE ============================= */
+-/* ======================================================================== */
++/* ======================================================================== */
++/*                            MAIN 68K CORE                                 */
++/* ======================================================================== */
++
++extern int vdp_68k_irq_ack(int int_level);
++
++#define m68ki_cpu m68k
++#define MUL (7)
++
++/* ======================================================================== */
++/* ================================ INCLUDES ============================== */
++/* ======================================================================== */
++
++#ifndef BUILD_TABLES
++#include "m68ki_cycles.h"
++#endif
++
++#include "m68kconf.h"
++#include "m68kcpu.h"
++#include "m68kops.h"
++#include <string.h>
++extern unsigned char work_ram[0x10000];
++
++/* ======================================================================== */
++/* ================================= DATA ================================= */
++/* ======================================================================== */
++
++#ifdef BUILD_TABLES
++static unsigned char m68ki_cycles[0x10000];
++#endif
++
++static int irq_latency;
++
++m68ki_cpu_core m68k;
++
++
++/* ======================================================================== */
++/* =============================== CALLBACKS ============================== */
++/* ======================================================================== */
++
++/* Default callbacks used if the callback hasn't been set yet, or if the
++ * callback is set to NULL
++ */
++
++#if M68K_EMULATE_INT_ACK == OPT_ON
++/* Interrupt acknowledge */
++static int default_int_ack_callback(int int_level)
++{
++  CPU_INT_LEVEL = 0;
++  return M68K_INT_ACK_AUTOVECTOR;
++}
++#endif
++
++#if M68K_EMULATE_RESET == OPT_ON
++/* Called when a reset instruction is executed */
++static void default_reset_instr_callback(void)
++{
++}
++#endif
++
++#if M68K_TAS_HAS_CALLBACK == OPT_ON
++/* Called when a tas instruction is executed */
++static int default_tas_instr_callback(void)
++{
++  return 1; // allow writeback
++}
++#endif
++
++#if M68K_EMULATE_FC == OPT_ON
++/* Called every time there's bus activity (read/write to/from memory */
++static void default_set_fc_callback(unsigned int new_fc)
++{
++}
++#endif
++
++
++/* ======================================================================== */
++/* ================================= API ================================== */
++/* ======================================================================== */
++
++/* Access the internals of the CPU */
++unsigned int m68k_get_reg(m68k_register_t regnum)
++{
++  switch(regnum)
++  {
++    case M68K_REG_D0:  return m68ki_cpu.dar[0];
++    case M68K_REG_D1:  return m68ki_cpu.dar[1];
++    case M68K_REG_D2:  return m68ki_cpu.dar[2];
++    case M68K_REG_D3:  return m68ki_cpu.dar[3];
++    case M68K_REG_D4:  return m68ki_cpu.dar[4];
++    case M68K_REG_D5:  return m68ki_cpu.dar[5];
++    case M68K_REG_D6:  return m68ki_cpu.dar[6];
++    case M68K_REG_D7:  return m68ki_cpu.dar[7];
++    case M68K_REG_A0:  return m68ki_cpu.dar[8];
++    case M68K_REG_A1:  return m68ki_cpu.dar[9];
++    case M68K_REG_A2:  return m68ki_cpu.dar[10];
++    case M68K_REG_A3:  return m68ki_cpu.dar[11];
++    case M68K_REG_A4:  return m68ki_cpu.dar[12];
++    case M68K_REG_A5:  return m68ki_cpu.dar[13];
++    case M68K_REG_A6:  return m68ki_cpu.dar[14];
++    case M68K_REG_A7:  return m68ki_cpu.dar[15];
++    case M68K_REG_PC:  return MASK_OUT_ABOVE_32(m68ki_cpu.pc);
++    case M68K_REG_SR:  return  m68ki_cpu.t1_flag        |
++                  (m68ki_cpu.s_flag << 11)              |
++                   m68ki_cpu.int_mask                   |
++                  ((m68ki_cpu.x_flag & XFLAG_SET) >> 4) |
++                  ((m68ki_cpu.n_flag & NFLAG_SET) >> 4) |
++                  ((!m68ki_cpu.not_z_flag) << 2)        |
++                  ((m68ki_cpu.v_flag & VFLAG_SET) >> 6) |
++                  ((m68ki_cpu.c_flag & CFLAG_SET) >> 8);
++    case M68K_REG_SP:  return m68ki_cpu.dar[15];
++    case M68K_REG_USP:  return m68ki_cpu.s_flag ? m68ki_cpu.sp[0] : m68ki_cpu.dar[15];
++    case M68K_REG_ISP:  return m68ki_cpu.s_flag ? m68ki_cpu.dar[15] : m68ki_cpu.sp[4];
++#if M68K_EMULATE_PREFETCH
++    case M68K_REG_PREF_ADDR:  return m68ki_cpu.pref_addr;
++    case M68K_REG_PREF_DATA:  return m68ki_cpu.pref_data;
++#endif
++    case M68K_REG_IR:  return m68ki_cpu.ir;
++    default:      return 0;
++  }
++}
++
++void m68k_set_reg(m68k_register_t regnum, unsigned int value)
++{
++  switch(regnum)
++  {
++    case M68K_REG_D0:  REG_D[0] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D1:  REG_D[1] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D2:  REG_D[2] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D3:  REG_D[3] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D4:  REG_D[4] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D5:  REG_D[5] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D6:  REG_D[6] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_D7:  REG_D[7] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A0:  REG_A[0] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A1:  REG_A[1] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A2:  REG_A[2] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A3:  REG_A[3] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A4:  REG_A[4] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A5:  REG_A[5] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A6:  REG_A[6] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_A7:  REG_A[7] = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_PC:  m68ki_jump(MASK_OUT_ABOVE_32(value)); return;
++    case M68K_REG_SR:  m68ki_set_sr(value); return;
++    case M68K_REG_SP:  REG_SP = MASK_OUT_ABOVE_32(value); return;
++    case M68K_REG_USP:  if(FLAG_S)
++                REG_USP = MASK_OUT_ABOVE_32(value);
++              else
++                REG_SP = MASK_OUT_ABOVE_32(value);
++              return;
++    case M68K_REG_ISP:  if(FLAG_S)
++                REG_SP = MASK_OUT_ABOVE_32(value);
++              else
++                REG_ISP = MASK_OUT_ABOVE_32(value);
++              return;
++    case M68K_REG_IR:  REG_IR = MASK_OUT_ABOVE_16(value); return;
++#if M68K_EMULATE_PREFETCH
++    case M68K_REG_PREF_ADDR:  CPU_PREF_ADDR = MASK_OUT_ABOVE_32(value); return;
++#endif
++    default:      return;
++  }
++}
++
++/* Set the callbacks */
++#if M68K_EMULATE_INT_ACK == OPT_ON
++void m68k_set_int_ack_callback(int  (*callback)(int int_level))
++{
++  CALLBACK_INT_ACK = callback ? callback : default_int_ack_callback;
++}
++#endif
++
++#if M68K_EMULATE_RESET == OPT_ON
++void m68k_set_reset_instr_callback(void  (*callback)(void))
++{
++  CALLBACK_RESET_INSTR = callback ? callback : default_reset_instr_callback;
++}
++#endif
++
++#if M68K_TAS_HAS_CALLBACK == OPT_ON
++void m68k_set_tas_instr_callback(int  (*callback)(void))
++{
++  CALLBACK_TAS_INSTR = callback ? callback : default_tas_instr_callback;
++}
++#endif
++
++#if M68K_EMULATE_FC == OPT_ON
++void m68k_set_fc_callback(void  (*callback)(unsigned int new_fc))
++{
++  CALLBACK_SET_FC = callback ? callback : default_set_fc_callback;
++}
++#endif
++
++#ifdef LOGERROR
++
++extern void error(char *format, ...);
++extern uint16 v_counter;
++#endif
++
++/* ASG: rewrote so that the int_level is a mask of the IPL0/IPL1/IPL2 bits */
++/* KS: Modified so that IPL* bits match with mask positions in the SR
++ *     and cleaned out remenants of the interrupt controller.
++ */
++void m68k_update_irq(unsigned int mask)
++{
++  /* Update IRQ level */
++  CPU_INT_LEVEL |= (mask << 8);
++  
++#ifdef LOGERROR
++  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
++#endif
++}
++
++void m68k_set_irq(unsigned int int_level)
++{
++  /* Set IRQ level */
++  CPU_INT_LEVEL = int_level << 8;
++  
++#ifdef LOGERROR
++  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
++#endif
++}
++
++/* IRQ latency (Fatal Rewind, Sesame's Street Counting Cafe)*/
++void m68k_set_irq_delay(unsigned int int_level)
++{
++  /* Prevent reentrance */
++  if (!irq_latency)
++  {
++    /* This is always triggered from MOVE instructions (VDP CTRL port write) */
++    /* We just make sure this is not a MOVE.L instruction as we could be in */
++    /* the middle of its execution (first memory write).                   */
++    if ((REG_IR & 0xF000) != 0x2000)
++    {
++      /* Finish executing current instruction */
++      USE_CYCLES(CYC_INSTRUCTION[REG_IR]);
++
++      /* One instruction delay before interrupt */
++      irq_latency = 1;
++      m68ki_trace_t1() /* auto-disable (see m68kcpu.h) */
++      m68ki_use_data_space() /* auto-disable (see m68kcpu.h) */
++      REG_IR = m68ki_read_imm_16();
++      m68ki_instruction_jump_table[REG_IR]();
++      m68ki_exception_if_trace() /* auto-disable (see m68kcpu.h) */
++      irq_latency = 0;
++    }
++
++    /* Set IRQ level */
++    CPU_INT_LEVEL = int_level << 8;
++  }
++  
++#ifdef LOGERROR
++  error("[%d(%d)][%d(%d)] m68k IRQ Level = %d(0x%02x) (%x)\n", v_counter, m68k.cycles/3420, m68k.cycles, m68k.cycles%3420,CPU_INT_LEVEL>>8,FLAG_INT_MASK,m68k_get_reg(M68K_REG_PC));
++#endif
++
++  /* Check interrupt mask to process IRQ  */
++  m68ki_check_interrupts(); /* Level triggered (IRQ) */
++}
++
++void m68k_run(unsigned int cycles) 
++{
++  /* Make sure CPU is not already ahead */
++  if (m68k.cycles >= cycles)
++  {
++    return;
++  }
++
++  /* Check interrupt mask to process IRQ if needed */
++  m68ki_check_interrupts();
++
++  /* Make sure we're not stopped */
++  if (CPU_STOPPED)
++  {
++    m68k.cycles = cycles;
++    return;
++  }
++
++  /* Set aimed cycle count for current CPU execution frame */
++  m68k.cycle_end = cycles;
++
++  /* Return point for when we have an address error (TODO: use goto) */
++  m68ki_set_address_error_trap() /* auto-disable (see m68kcpu.h) */
++
++#ifdef LOGERROR
++  error("[%d][%d] m68k run to %d cycles (%x), irq mask = %x (%x)\n", v_counter, m68k.cycles, cycles, m68k.pc,FLAG_INT_MASK, CPU_INT_LEVEL);
++#endif
++
++  while (m68k.cycles < cycles)
++  {
++    /* Set tracing according to T1. */
++    m68ki_trace_t1() /* auto-disable (see m68kcpu.h) */
++
++    /* Set the address space for reads */
++    m68ki_use_data_space() /* auto-disable (see m68kcpu.h) */
++
++#ifdef HOOK_CPU
++    /* Trigger execution hook */
++    if (UNLIKELY(cpu_hook))
++      cpu_hook(HOOK_M68K_E, 0, REG_PC, 0);
++#endif
++
++#ifndef TRACE_DISABLE_HERE
++    if (&m68ki_cpu == &m68k) {
++      unsigned int _pc = REG_PC & 0xFFFFFF;
++      trace_cur_pc = _pc;
++      if (_pc < TRACE_ROM_SIZE) { trace_exec[_pc] = 1; if (trace_hist_on) trace_hist[_pc>>1]++; }
++      if (trace_pclog_on && trace_pclog_n < TRACE_PCLOG_MAX) { trace_pclog[trace_pclog_n*2] = _pc; trace_pclog[trace_pclog_n*2+1] = m68k.cycles; trace_pclog_n++; }
++      if (trace_cw_pcs[0] != 0xFFFFFFFF && trace_cw_n < TRACE_CW_MAX) { int k; for (k = 0; k < 16 && trace_cw_pcs[k] != 0xFFFFFFFF; k++) if (trace_cw_pcs[k] == _pc) { unsigned int *r = &trace_cw_log[trace_cw_n*17]; int j; r[0] = _pc; for (j = 0; j < 16; j++) r[1+j] = REG_DA[j]; trace_cw_n++; break; } }
++      if (_pc >= trace_ss_lo && _pc <= trace_ss_hi && trace_ss_n < TRACE_SS_MAX) {
++        int w;
++        for (w = 0; w < 16 && trace_ss_pcs[w] != 0xFFFFFFFF; w++) {
++          if (trace_ss_pcs[w] != _pc) continue;
++          if (trace_ss_taken[w] < trace_ss_max && (trace_ss_count[w]++ % trace_ss_stride) == 0) {
++            unsigned int *r = (unsigned int *)&trace_ss_buf[trace_ss_n*TRACE_SS_SIZE]; int k;
++            for (k = 0; k < 16; k++) r[k] = REG_DA[k];
++            r[16] = m68ki_get_sr(); r[17] = _pc;
++            memcpy(&trace_ss_buf[trace_ss_n*TRACE_SS_SIZE + 18*4], work_ram, 0x10000);
++            trace_ss_n++; trace_ss_taken[w]++;
++          }
++          break;
++        }
++      }
++      if (trace_pclog_on && trace_pclog_n >= trace_reg_i0 && trace_pclog_n < trace_reg_i1 && trace_reg_n < TRACE_REG_MAX) {
++        unsigned int *r = &trace_reglog[trace_reg_n*17]; int k; r[0] = _pc;
++        for (k = 0; k < 16; k++) r[1+k] = REG_DA[k];
++        trace_reg_n++;
++      }
++      else if (_pc >= 0xFF0000) trace_ramexec[_pc & 0xFFFF] = 1;
++    }
++#endif
++    {
++    int _free = 0;
++    unsigned int _c0 = 0, _r0 = 0;
++#ifndef TRACE_DISABLE_HERE
++    if (trace_free_n && &m68ki_cpu == &m68k && trace_is_free(REG_PC & 0xFFFFFF)) {
++      _free = 1; _c0 = m68k.cycles; _r0 = m68k.refresh_cycles;
++    }
++#endif
++    /* Decode next instruction */
++    REG_IR = m68ki_read_imm_16();
++
++    /* 68K bus access refresh delay (Mega Drive / Genesis specific) */
++    if (m68k.cycles >= m68k.refresh_cycles)
++    {
++      m68k.refresh_cycles = m68k.cycles + (128*7);
++      m68k.cycles += (2*7);
++    }
++
++    /* Execute instruction */
++    m68ki_instruction_jump_table[REG_IR]();
++    USE_CYCLES(CYC_INSTRUCTION[REG_IR]);
++    if (_free) { m68k.cycles = _c0; m68k.refresh_cycles = _r0; }
++    }
++
++    /* Trace m68k_exception, if necessary */
++    m68ki_exception_if_trace(); /* auto-disable (see m68kcpu.h) */
++  }
++
++  /* Reset aimed cycle count to indicate end of CPU execution frame */
++  m68k.cycle_end = 0;
++}
++
++int m68k_cycles(void)
++{
++  return CYC_INSTRUCTION[REG_IR];
++}
++
++void m68k_init(void)
++{
++#ifdef BUILD_TABLES
++  static uint emulation_initialized = 0;
++
++  /* The first call to this function initializes the opcode handler jump table */
++  if(!emulation_initialized)
++  {
++    m68ki_build_opcode_table();
++    emulation_initialized = 1;
++  }
++#endif
++
++#ifdef M68K_OVERCLOCK_SHIFT
++  m68k.cycle_ratio = 1 << M68K_OVERCLOCK_SHIFT;
++#endif
++
++#if M68K_EMULATE_INT_ACK == OPT_ON
++  m68k_set_int_ack_callback(NULL);
++#endif
++#if M68K_EMULATE_RESET == OPT_ON
++  m68k_set_reset_instr_callback(NULL);
++#endif
++#if M68K_TAS_HAS_CALLBACK == OPT_ON
++  m68k_set_tas_instr_callback(NULL);
++#endif
++#if M68K_EMULATE_FC == OPT_ON
++  m68k_set_fc_callback(NULL);
++#endif
++}
++
++/* Pulse the RESET line on the CPU */
++void m68k_pulse_reset(void)
++{
++  /* Clear all stop levels */
++  CPU_STOPPED = 0;
++#if M68K_EMULATE_ADDRESS_ERROR
++  CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
++#endif
++
++  /* Turn off tracing */
++  FLAG_T1 = 0;
++  m68ki_clear_trace()
++
++  /* Interrupt mask to level 7 */
++  FLAG_INT_MASK = 0x0700;
++  CPU_INT_LEVEL = 0;
++  irq_latency = 0;
++
++  /* Go to supervisor mode */
++  m68ki_set_s_flag(SFLAG_SET);
++
++  /* Invalidate the prefetch queue */
++#if M68K_EMULATE_PREFETCH
++  /* Set to arbitrary number since our first fetch is from 0 */
++  CPU_PREF_ADDR = 0x1000;
++#endif /* M68K_EMULATE_PREFETCH */
++
++  /* Read the initial stack pointer and program counter */
++  m68ki_jump(0);
++  REG_SP = m68ki_read_imm_32();
++  REG_PC = m68ki_read_imm_32();
++  m68ki_jump(REG_PC);
++
++#if M68K_EMULATE_ADDRESS_ERROR
++  CPU_RUN_MODE = RUN_MODE_NORMAL;
++#endif
++
++  USE_CYCLES(CYC_EXCEPTION[EXCEPTION_RESET]);
++
++  /* Synchronize 68k bus refresh mechanism (Mega Drive / Genesis specific) */
++  m68k.refresh_cycles = ((m68k.cycles / (128*7)) * (128*7)) + 128*7;
++}
++
++void m68k_pulse_halt(void)
++{
++  /* Pulse the HALT line on the CPU */
++  CPU_STOPPED |= STOP_LEVEL_HALT;
++}
++
++void m68k_clear_halt(void)
++{
++  /* Clear the HALT line on the CPU */
++  CPU_STOPPED &= ~STOP_LEVEL_HALT;
++}
++
++/* ======================================================================== */
++/* ============================== END OF FILE ============================= */
++/* ======================================================================== */
+diff --git a/core/m68k/m68kcpu.h b/core/m68k/m68kcpu.h
+index b702173..ca11433 100644
+--- a/core/m68k/m68kcpu.h
++++ b/core/m68k/m68kcpu.h
+@@ -14,6 +14,7 @@
+ #endif /* M68K_EMULATE_ADDRESS_ERROR */
+ 
+ #include "m68k.h"
++#include "../trace.h"
+ 
+ 
+ /* ======================================================================== */
+@@ -538,9 +539,9 @@
+ #define m68ki_read_imm_8() MASK_OUT_ABOVE_8(m68ki_read_imm_16())
+ 
+ /* Map PC-relative reads */
+-#define m68ki_read_pcrel_8(A) m68k_read_pcrelative_8(A)
+-#define m68ki_read_pcrel_16(A) m68k_read_pcrelative_16(A)
+-#define m68ki_read_pcrel_32(A) m68k_read_pcrelative_32(A)
++#define m68ki_read_pcrel_8(A) (TRACE_RD(A,0x11), m68k_read_pcrelative_8(A))
++#define m68ki_read_pcrel_16(A) (TRACE_RD(A,0x12), TRACE_RD((A)+1,0x12), m68k_read_pcrelative_16(A))
++#define m68ki_read_pcrel_32(A) (TRACE_RD(A,0x14), TRACE_RD((A)+1,0x14), TRACE_RD((A)+2,0x14), TRACE_RD((A)+3,0x14), m68k_read_pcrelative_32(A))
+ 
+ 
+ /* ======================================================================== */
+@@ -865,7 +866,7 @@ INLINE uint m68ki_read_8(uint address)
+   if (UNLIKELY(cpu_hook))
+     cpu_hook(HOOK_M68K_R, 1, address, val);
+ #endif
+-
++  if (&m68ki_cpu == &m68k) { TRACE_RD(address,1); trace_rwatch(address, val); }
+   return val;
+ }
+ 
+@@ -885,7 +886,7 @@ INLINE uint m68ki_read_16(uint address)
+   if (UNLIKELY(cpu_hook))
+     cpu_hook(HOOK_M68K_R, 2, address, val);
+ #endif
+-
++  if (&m68ki_cpu == &m68k) { TRACE_RD(address,2); TRACE_RD(address+1,2); trace_rwatch(address, val); }
+   return val;
+ }
+ 
+@@ -909,12 +910,17 @@ INLINE uint m68ki_read_32(uint address)
+   if (UNLIKELY(cpu_hook))
+     cpu_hook(HOOK_M68K_R, 4, address, val);
+ #endif
++  if (&m68ki_cpu == &m68k) trace_rwatch(address, val);
++  if (&m68ki_cpu == &m68k) { int _f = 4 | (((val & 0xFFFFFF) < TRACE_ROM_SIZE && (val & 0xFFFFFF) >= 0x200) ? (((val>>24)==0) ? 8 : 0x80) : 0); TRACE_RD(address,_f|4); TRACE_RD(address+1,4); if ((address&0xFFFFFF) < TRACE_ROM_SIZE) { trace_rclass[address&0xFFFFFF] |= trace_irclass(REG_IR); trace_last_origin = (address&0xFFFFFF)+1; trace_last_val = val; }
++    else if ((address&0xFF0000) == 0xFF0000) { unsigned int _o = trace_shadow[(address&0xFFFF)>>1]; if (_o && _o-1 < TRACE_ROM_SIZE) trace_rclass_ram[_o-1] |= trace_irclass(REG_IR); trace_last_origin = _o; trace_last_val = val; }
++    else trace_last_origin = 0; TRACE_RD(address+2,4); TRACE_RD(address+3,4); }
+ 
+   return val;
+ }
+ 
+ INLINE void m68ki_write_8(uint address, uint value)
+ {
++  if (&m68ki_cpu == &m68k) trace_watch(address, value);
+   cpu_memory_map *temp;
+ 
+   m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_DATA) /* auto-disable (see m68kcpu.h) */
+@@ -931,6 +937,7 @@ INLINE void m68ki_write_8(uint address, uint value)
+ 
+ INLINE void m68ki_write_16(uint address, uint value)
+ {
++  if (&m68ki_cpu == &m68k) trace_watch(address, value);
+   cpu_memory_map *temp;
+ 
+   m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_DATA) /* auto-disable (see m68kcpu.h) */
+@@ -944,10 +951,12 @@ INLINE void m68ki_write_16(uint address, uint value)
+   temp = &m68ki_cpu.memory_map[((address)>>16)&0xff];
+   if (temp->write16) (*temp->write16)(ADDRESS_68K(address),value);
+   else *(uint16 *)(temp->base + ((address) & 0xffff)) = value;
++  if (&m68ki_cpu == &m68k && (address&0xFF0000) == 0xFF0000) trace_shadow[(address&0xFFFF)>>1] = 0;
+ }
+ 
+ INLINE void m68ki_write_32(uint address, uint value)
+ {
++  if (&m68ki_cpu == &m68k) trace_watch(address, value);
+   cpu_memory_map *temp;
+ 
+   m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_DATA) /* auto-disable (see m68kcpu.h) */
+@@ -965,6 +974,10 @@ INLINE void m68ki_write_32(uint address, uint value)
+   temp = &m68ki_cpu.memory_map[((address + 2)>>16)&0xff];
+   if (temp->write16) (*temp->write16)(ADDRESS_68K(address+2),value&0xffff);
+   else *(uint16 *)(temp->base + ((address + 2) & 0xffff)) = value;
++  if (&m68ki_cpu == &m68k && (address&0xFF0000) == 0xFF0000) {
++    trace_shadow[(address&0xFFFF)>>1] = (value == trace_last_val) ? trace_last_origin : 0;
++    trace_shadow[((address+2)&0xFFFF)>>1] = 0;
++  }
+ }
+ 
+ 
+diff --git a/core/memz80.c b/core/memz80.c
+index bdd876a..0797d3b 100644
+--- a/core/memz80.c
++++ b/core/memz80.c
+@@ -40,6 +40,7 @@
+  ****************************************************************************************/
+ 
+ #include "shared.h"
++#include "trace.h"
+ 
+ 
+ /*--------------------------------------------------------------------------*/
+@@ -152,6 +153,7 @@ unsigned char z80_memory_r(unsigned int address)
+ 
+       /* read from 68k banked area */
+       address = zbank | (address & 0x7FFF);
++      TRACE_RD(address,0x40);
+       if (zbank_memory_map[address >> 16].read)
+       {
+         return (*zbank_memory_map[address >> 16].read)(address);
+diff --git a/core/trace.c b/core/trace.c
+new file mode 100644
+index 0000000..c06791c
+--- /dev/null
++++ b/core/trace.c
+@@ -0,0 +1,72 @@
++#include "trace.h"
++extern unsigned char vram[0x10000], cram[0x80], vsram[0x80], reg[0x20];
++unsigned char trace_exec[TRACE_ROM_SIZE];
++unsigned char trace_read[TRACE_ROM_SIZE];
++unsigned int  trace_reader[TRACE_ROM_SIZE/2];
++unsigned int  trace_cur_pc;
++int trace_enabled = 1;
++unsigned int trace_hist[TRACE_ROM_SIZE/2];
++int trace_hist_on;
++unsigned int trace_pclog[TRACE_PCLOG_MAX*2];
++unsigned int trace_pclog_n; int trace_pclog_on;
++unsigned int trace_cw_pcs[16] = {0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF}, trace_cw_n, trace_cw_log[TRACE_CW_MAX*17];
++unsigned int trace_reglog[TRACE_REG_MAX*17]; unsigned int trace_reg_n, trace_reg_i0 = 0xFFFFFFFF, trace_reg_i1;
++unsigned int trace_ss_pcs[16] = {0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF};
++unsigned int trace_ss_taken[16], trace_ss_count[16], trace_ss_n, trace_ss_max, trace_ss_stride = 1, trace_ss_lo = 0xFFFFFFFF, trace_ss_hi;
++unsigned char trace_ss_buf[TRACE_SS_MAX*TRACE_SS_SIZE];
++unsigned int trace_rw_pc = 0xFFFFFFFF, trace_rw_n, trace_rw_log[TRACE_RW_MAX*3];
++unsigned char trace_ramexec[0x10000];
++unsigned char trace_rclass[TRACE_ROM_SIZE];
++unsigned char trace_rclass_ram[TRACE_ROM_SIZE];
++unsigned int  trace_shadow[0x8000];
++unsigned int  trace_last_origin, trace_last_val;
++unsigned int  trace_watch_lo, trace_watch_hi, trace_watch_n, trace_watch_log[4096*3];
++unsigned int trace_free[TRACE_FREE_MAX * 2], trace_free_n, trace_free_on, trace_free_sp;
++
++void *retro_trace_get(int which)
++{
++  switch (which) {
++    case 0: return trace_exec;
++    case 1: return trace_read;
++    case 2: return trace_reader;
++    case 3: return trace_ramexec;
++    case 4: return &trace_enabled;
++    case 5: return trace_rclass;
++    case 6: return trace_rclass_ram;
++    case 7: return &trace_watch_lo;
++    case 8: return &trace_watch_hi;
++    case 9: return &trace_watch_n;
++    case 10: return trace_watch_log;
++    case 11: return trace_hist;
++    case 12: return &trace_hist_on;
++    case 13: return trace_pclog;
++    case 14: return &trace_pclog_n;
++    case 15: return &trace_pclog_on;
++    case 16: return &trace_rw_pc;
++    case 17: return &trace_rw_n;
++    case 18: return trace_rw_log;
++    case 19: return trace_reglog;
++    case 20: return &trace_reg_n;
++    case 21: return &trace_reg_i0;
++    case 22: return &trace_reg_i1;
++    case 23: return trace_cw_pcs;
++    case 24: return &trace_cw_n;
++    case 25: return trace_cw_log;
++    case 26: return vram;
++    case 27: return cram;
++    case 28: return vsram;
++    case 29: return reg;
++    case 30: return trace_ss_pcs;
++    case 31: return &trace_ss_n;
++    case 32: return &trace_ss_max;
++    case 33: return &trace_ss_stride;
++    case 34: return trace_ss_buf;
++    case 35: return trace_ss_count;
++    case 36: return trace_ss_taken;
++    case 37: return &trace_ss_lo;
++    case 38: return &trace_ss_hi;
++    case 39: return trace_free;
++    case 40: return &trace_free_n;
++  }
++  return 0;
++}
+diff --git a/core/trace.h b/core/trace.h
+new file mode 100644
+index 0000000..dc0c127
+--- /dev/null
++++ b/core/trace.h
+@@ -0,0 +1,54 @@
++/* ROM analysis tracing hooks (added for disassembly work) */
++#ifndef TRACE_H
++#define TRACE_H
++#define TRACE_ROM_SIZE 0x400000
++extern unsigned char trace_exec[TRACE_ROM_SIZE];   /* bit0: instruction start executed */
++extern unsigned char trace_read[TRACE_ROM_SIZE];   /* bit0: byte read, bit1: word read, bit2: long read, bit3: long read value in ROM range,
++                                                      bit4: pc-relative read, bit5: VDP DMA source, bit6: Z80 bank read */
++extern unsigned int  trace_reader[TRACE_ROM_SIZE/2];/* first PC that read this word */
++extern unsigned int  trace_cur_pc;
++extern int trace_enabled;
++extern unsigned int trace_hist[TRACE_ROM_SIZE/2]; /* per-PC execution counts (when trace_hist_on) */
++extern int trace_hist_on;
++#define TRACE_PCLOG_MAX (1<<21)
++extern unsigned int trace_pclog[TRACE_PCLOG_MAX*2]; /* pc, cycles */
++extern unsigned int trace_pclog_n; extern int trace_pclog_on;
++#define TRACE_REG_MAX (1<<18)
++extern unsigned int trace_reglog[TRACE_REG_MAX*17]; extern unsigned int trace_reg_n, trace_reg_i0, trace_reg_i1;
++#define TRACE_CW_MAX (1<<16)
++extern unsigned int trace_cw_pcs[16], trace_cw_n, trace_cw_log[TRACE_CW_MAX*17];
++/* RAM snapshots at up to 16 PCs: regs d0-a7, SR, PC (18 words) then 64KB work RAM (as stored) */
++#define TRACE_SS_MAX 256
++#define TRACE_SS_SIZE (18*4 + 0x10000)
++extern unsigned int trace_ss_pcs[16], trace_ss_taken[16], trace_ss_count[16], trace_ss_n, trace_ss_max, trace_ss_stride, trace_ss_lo, trace_ss_hi;
++extern unsigned char trace_ss_buf[TRACE_SS_MAX*TRACE_SS_SIZE];
++#define TRACE_RW_MAX (1<<20)
++extern unsigned int trace_rw_pc, trace_rw_n, trace_rw_log[TRACE_RW_MAX*3]; /* reads done by instruction at trace_rw_pc */
++static inline void trace_rwatch(unsigned int a, unsigned int v) { if ((trace_cur_pc == trace_rw_pc || trace_rw_pc == 0xFFFFFFFEu) && trace_rw_n < TRACE_RW_MAX) { trace_rw_log[trace_rw_n*3] = trace_cur_pc; trace_rw_log[trace_rw_n*3+1] = a & 0xFFFFFF; trace_rw_log[trace_rw_n*3+2] = v; trace_rw_n++; } }
++extern unsigned char trace_ramexec[0x10000];
++extern unsigned char trace_rclass[TRACE_ROM_SIZE];
++extern unsigned char trace_rclass_ram[TRACE_ROM_SIZE]; /* same classes, for ROM longs later read back from RAM copies */
++extern unsigned int  trace_shadow[0x8000];          /* RAM word -> ROM origin+1 of the long stored there */
++extern unsigned int  trace_last_origin, trace_last_val;
++extern unsigned int  trace_watch_lo, trace_watch_hi, trace_watch_n, trace_watch_log[4096*3]; /* write watchpoint: pc, addr, value */
++static inline void trace_watch(unsigned int a, unsigned int v) { a &= 0xFFFFFF; if (a >= trace_watch_lo && a < trace_watch_hi && trace_watch_n < 4096) { trace_watch_log[trace_watch_n*3] = trace_cur_pc; trace_watch_log[trace_watch_n*3+1] = a; trace_watch_log[trace_watch_n*3+2] = v; trace_watch_n++; } }
++static inline int trace_irclass(unsigned int ir) { return ((ir & 0xF1C0) == 0x2040) ? 1 : ((ir & 0xFFC0) == 0x2F00) ? 2 : ((ir & 0xF1C0) == 0x2000) ? 4 : 8; } /* long-read classes: 1 movea.l, 2 push, 4 move.l->Dn, 8 other */
++static inline int trace_rd(unsigned int addr, int flag) { unsigned int _a=addr&0xFFFFFF; if (_a < TRACE_ROM_SIZE) { trace_read[_a] |= flag; if (!trace_reader[_a>>1]) trace_reader[_a>>1]=trace_cur_pc; } return 0; }
++#define TRACE_RD(addr,flag) trace_rd((addr),(flag))
++#endif
++
++/* free execution: instructions at PCs inside these ranges take no CPU time
++ * (used to give two builds identical timing, see tools/lockstep.py) */
++#define TRACE_FREE_MAX 512
++extern unsigned int trace_free[TRACE_FREE_MAX * 2], trace_free_n, trace_free_on, trace_free_sp;
++static inline int trace_is_free(unsigned int pc)
++{
++  unsigned int lo = 0, hi = trace_free_n;
++  while (lo < hi) {               /* ranges sorted by start */
++    unsigned int m = (lo + hi) >> 1;
++    if (pc < trace_free[m * 2]) hi = m;
++    else if (pc >= trace_free[m * 2 + 1]) lo = m + 1;
++    else return 1;
++  }
++  return 0;
++}
+diff --git a/core/vdp_ctrl.c b/core/vdp_ctrl.c
+index bd454f6..82506ee 100644
+--- a/core/vdp_ctrl.c
++++ b/core/vdp_ctrl.c
+@@ -40,6 +40,7 @@
+  ****************************************************************************************/
+ 
+ #include "shared.h"
++#include "trace.h"
+ #include "hvc.h"
+ 
+ extern int8 reset_do_not_clear_buffers;
+@@ -3101,6 +3102,7 @@ static void vdp_dma_68k_ext(unsigned int length)
+       data = *(uint16 *)(m68k.memory_map[source>>16].base + (source & 0xFFFF));
+     }
+  
++    TRACE_RD(source,0x20); TRACE_RD(source+1,0x20);
+     /* Increment source address */
+     source += 2;
+ 

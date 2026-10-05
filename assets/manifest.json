@@ -1,0 +1,1895 @@
+[
+ {
+  "name": "gfx_001810_lcw",
+  "start": 6160,
+  "end": 7206,
+  "kind": "lcw_tiles",
+  "file": "gfx/gfx_001810_lcw.png",
+  "orig": "gfx/gfx_001810_lcw.orig.lcw",
+  "size": 1568
+ },
+ {
+  "name": "gfx_001C26_lcw",
+  "start": 7206,
+  "end": 7327,
+  "kind": "lcw_tiles",
+  "file": "gfx/gfx_001C26_lcw.png",
+  "orig": "gfx/gfx_001C26_lcw.orig.lcw",
+  "size": 4096
+ },
+ {
+  "name": "pal_025F3E",
+  "start": 155454,
+  "end": 155582,
+  "kind": "palette",
+  "file": "palettes/pal_025F3E.pal"
+ },
+ {
+  "name": "pal_025FBE",
+  "start": 155582,
+  "end": 155710,
+  "kind": "palette",
+  "file": "palettes/pal_025FBE.pal"
+ },
+ {
+  "name": "pal_02603E",
+  "start": 155710,
+  "end": 155838,
+  "kind": "palette",
+  "file": "palettes/pal_02603E.pal"
+ },
+ {
+  "name": "pal_0260BE",
+  "start": 155838,
+  "end": 155966,
+  "kind": "palette",
+  "file": "palettes/pal_0260BE.pal"
+ },
+ {
+  "name": "gfx_026E3C",
+  "start": 159292,
+  "end": 160572,
+  "kind": "tiles",
+  "file": "gfx/gfx_026E3C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02733C",
+  "start": 160572,
+  "end": 161852,
+  "kind": "tiles",
+  "file": "gfx/gfx_02733C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02783C",
+  "start": 161852,
+  "end": 163004,
+  "kind": "tiles",
+  "file": "gfx/gfx_02783C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_027CBC",
+  "start": 163004,
+  "end": 163388,
+  "kind": "tiles",
+  "file": "gfx/gfx_027CBC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_027E3C",
+  "start": 163388,
+  "end": 163772,
+  "kind": "tiles",
+  "file": "gfx/gfx_027E3C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0280BC",
+  "start": 164028,
+  "end": 172220,
+  "kind": "tiles",
+  "file": "gfx/gfx_0280BC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02A0BC",
+  "start": 172220,
+  "end": 172988,
+  "kind": "tiles",
+  "file": "gfx/gfx_02A0BC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02A3BC",
+  "start": 172988,
+  "end": 173628,
+  "kind": "tiles",
+  "file": "gfx/gfx_02A3BC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02A63C",
+  "start": 173628,
+  "end": 174780,
+  "kind": "tiles",
+  "file": "gfx/gfx_02A63C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "pal_02AAFC",
+  "start": 174844,
+  "end": 174972,
+  "kind": "palette",
+  "file": "palettes/pal_02AAFC.pal"
+ },
+ {
+  "name": "pal_02AB7C",
+  "start": 174972,
+  "end": 175100,
+  "kind": "palette",
+  "file": "palettes/pal_02AB7C.pal"
+ },
+ {
+  "name": "pal_02ACBC",
+  "start": 175292,
+  "end": 175420,
+  "kind": "palette",
+  "file": "palettes/pal_02ACBC.pal"
+ },
+ {
+  "name": "gfx_02B1E0",
+  "start": 176608,
+  "end": 190976,
+  "kind": "tiles",
+  "file": "gfx/gfx_02B1E0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_02FB80",
+  "start": 195456,
+  "end": 209824,
+  "kind": "tiles",
+  "file": "gfx/gfx_02FB80.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_034520",
+  "start": 214304,
+  "end": 228672,
+  "kind": "tiles",
+  "file": "gfx/gfx_034520.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_038EC0",
+  "start": 233152,
+  "end": 247520,
+  "kind": "tiles",
+  "file": "gfx/gfx_038EC0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_03D860",
+  "start": 252000,
+  "end": 266368,
+  "kind": "tiles",
+  "file": "gfx/gfx_03D860.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "pal_042200",
+  "start": 270848,
+  "end": 270976,
+  "kind": "palette",
+  "file": "palettes/pal_042200.pal"
+ },
+ {
+  "name": "gfx_042302",
+  "start": 271106,
+  "end": 282370,
+  "kind": "tiles",
+  "file": "gfx/gfx_042302.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_044F02",
+  "start": 282370,
+  "end": 286466,
+  "kind": "tiles",
+  "file": "gfx/gfx_044F02.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_045F02",
+  "start": 286466,
+  "end": 290562,
+  "kind": "tiles",
+  "file": "gfx/gfx_045F02.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_046F02",
+  "start": 290562,
+  "end": 294658,
+  "kind": "tiles",
+  "file": "gfx/gfx_046F02.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_052702",
+  "start": 337666,
+  "end": 341250,
+  "kind": "tiles",
+  "file": "gfx/gfx_052702.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_053502",
+  "start": 341250,
+  "end": 344834,
+  "kind": "tiles",
+  "file": "gfx/gfx_053502.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_054302",
+  "start": 344834,
+  "end": 352002,
+  "kind": "tiles",
+  "file": "gfx/gfx_054302.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_055F04",
+  "start": 352004,
+  "end": 356100,
+  "kind": "tiles",
+  "file": "gfx/gfx_055F04.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_056F04",
+  "start": 356100,
+  "end": 360196,
+  "kind": "tiles",
+  "file": "gfx/gfx_056F04.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_057F04",
+  "start": 360196,
+  "end": 360548,
+  "kind": "tiles",
+  "file": "gfx/gfx_057F04.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_058084",
+  "start": 360580,
+  "end": 364676,
+  "kind": "tiles",
+  "file": "gfx/gfx_058084.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059484",
+  "start": 365700,
+  "end": 365732,
+  "kind": "tiles",
+  "file": "gfx/gfx_059484.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059864",
+  "start": 366692,
+  "end": 366724,
+  "kind": "tiles",
+  "file": "gfx/gfx_059864.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0598A4",
+  "start": 366756,
+  "end": 366788,
+  "kind": "tiles",
+  "file": "gfx/gfx_0598A4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059924",
+  "start": 366884,
+  "end": 366916,
+  "kind": "tiles",
+  "file": "gfx/gfx_059924.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059A44",
+  "start": 367172,
+  "end": 367236,
+  "kind": "tiles",
+  "file": "gfx/gfx_059A44.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059AC4",
+  "start": 367300,
+  "end": 367364,
+  "kind": "tiles",
+  "file": "gfx/gfx_059AC4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059B24",
+  "start": 367396,
+  "end": 367428,
+  "kind": "tiles",
+  "file": "gfx/gfx_059B24.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_059BA4",
+  "start": 367524,
+  "end": 367556,
+  "kind": "tiles",
+  "file": "gfx/gfx_059BA4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05A184",
+  "start": 369028,
+  "end": 369124,
+  "kind": "tiles",
+  "file": "gfx/gfx_05A184.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05E3B4",
+  "start": 385972,
+  "end": 386356,
+  "kind": "tiles",
+  "file": "gfx/gfx_05E3B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05E834",
+  "start": 387124,
+  "end": 387508,
+  "kind": "tiles",
+  "file": "gfx/gfx_05E834.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05EE34",
+  "start": 388660,
+  "end": 389044,
+  "kind": "tiles",
+  "file": "gfx/gfx_05EE34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05EFB4",
+  "start": 389044,
+  "end": 389428,
+  "kind": "tiles",
+  "file": "gfx/gfx_05EFB4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05F134",
+  "start": 389428,
+  "end": 389812,
+  "kind": "tiles",
+  "file": "gfx/gfx_05F134.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05F434",
+  "start": 390196,
+  "end": 390964,
+  "kind": "tiles",
+  "file": "gfx/gfx_05F434.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05F734",
+  "start": 390964,
+  "end": 391732,
+  "kind": "tiles",
+  "file": "gfx/gfx_05F734.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05FA34",
+  "start": 391732,
+  "end": 392116,
+  "kind": "tiles",
+  "file": "gfx/gfx_05FA34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05FBB4",
+  "start": 392116,
+  "end": 392500,
+  "kind": "tiles",
+  "file": "gfx/gfx_05FBB4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_05FD34",
+  "start": 392500,
+  "end": 393268,
+  "kind": "tiles",
+  "file": "gfx/gfx_05FD34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_060034",
+  "start": 393268,
+  "end": 393652,
+  "kind": "tiles",
+  "file": "gfx/gfx_060034.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0601B4",
+  "start": 393652,
+  "end": 394804,
+  "kind": "tiles",
+  "file": "gfx/gfx_0601B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_060634",
+  "start": 394804,
+  "end": 395188,
+  "kind": "tiles",
+  "file": "gfx/gfx_060634.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0607B4",
+  "start": 395188,
+  "end": 395572,
+  "kind": "tiles",
+  "file": "gfx/gfx_0607B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_060AB4",
+  "start": 395956,
+  "end": 396340,
+  "kind": "tiles",
+  "file": "gfx/gfx_060AB4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_060DB4",
+  "start": 396724,
+  "end": 397108,
+  "kind": "tiles",
+  "file": "gfx/gfx_060DB4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_060F34",
+  "start": 397108,
+  "end": 397492,
+  "kind": "tiles",
+  "file": "gfx/gfx_060F34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_061234",
+  "start": 397876,
+  "end": 398260,
+  "kind": "tiles",
+  "file": "gfx/gfx_061234.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_061534",
+  "start": 398644,
+  "end": 399028,
+  "kind": "tiles",
+  "file": "gfx/gfx_061534.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0616B4",
+  "start": 399028,
+  "end": 399412,
+  "kind": "tiles",
+  "file": "gfx/gfx_0616B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_061834",
+  "start": 399412,
+  "end": 399796,
+  "kind": "tiles",
+  "file": "gfx/gfx_061834.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0619B4",
+  "start": 399796,
+  "end": 400180,
+  "kind": "tiles",
+  "file": "gfx/gfx_0619B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_061CB4",
+  "start": 400564,
+  "end": 400948,
+  "kind": "tiles",
+  "file": "gfx/gfx_061CB4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_062134",
+  "start": 401716,
+  "end": 402484,
+  "kind": "tiles",
+  "file": "gfx/gfx_062134.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_062434",
+  "start": 402484,
+  "end": 402868,
+  "kind": "tiles",
+  "file": "gfx/gfx_062434.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0625B4",
+  "start": 402868,
+  "end": 403636,
+  "kind": "tiles",
+  "file": "gfx/gfx_0625B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0628B4",
+  "start": 403636,
+  "end": 404020,
+  "kind": "tiles",
+  "file": "gfx/gfx_0628B4.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_062A34",
+  "start": 404020,
+  "end": 404404,
+  "kind": "tiles",
+  "file": "gfx/gfx_062A34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_062D34",
+  "start": 404788,
+  "end": 405172,
+  "kind": "tiles",
+  "file": "gfx/gfx_062D34.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_063150",
+  "start": 405840,
+  "end": 408528,
+  "kind": "tiles",
+  "file": "gfx/gfx_063150.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_063BF0",
+  "start": 408560,
+  "end": 411248,
+  "kind": "tiles",
+  "file": "gfx/gfx_063BF0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_064690",
+  "start": 411280,
+  "end": 413968,
+  "kind": "tiles",
+  "file": "gfx/gfx_064690.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_065130",
+  "start": 414000,
+  "end": 416688,
+  "kind": "tiles",
+  "file": "gfx/gfx_065130.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_067BB0",
+  "start": 424880,
+  "end": 427568,
+  "kind": "tiles",
+  "file": "gfx/gfx_067BB0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_068650",
+  "start": 427600,
+  "end": 430288,
+  "kind": "tiles",
+  "file": "gfx/gfx_068650.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0690F0",
+  "start": 430320,
+  "end": 433008,
+  "kind": "tiles",
+  "file": "gfx/gfx_0690F0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_069B90",
+  "start": 433040,
+  "end": 435728,
+  "kind": "tiles",
+  "file": "gfx/gfx_069B90.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_06A630",
+  "start": 435760,
+  "end": 438448,
+  "kind": "tiles",
+  "file": "gfx/gfx_06A630.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_06B0D0",
+  "start": 438480,
+  "end": 441168,
+  "kind": "tiles",
+  "file": "gfx/gfx_06B0D0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_06BB70",
+  "start": 441200,
+  "end": 443888,
+  "kind": "tiles",
+  "file": "gfx/gfx_06BB70.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_06DB50",
+  "start": 449360,
+  "end": 452048,
+  "kind": "tiles",
+  "file": "gfx/gfx_06DB50.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_073AF0",
+  "start": 473840,
+  "end": 476528,
+  "kind": "tiles",
+  "file": "gfx/gfx_073AF0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_075030",
+  "start": 479280,
+  "end": 481968,
+  "kind": "tiles",
+  "file": "gfx/gfx_075030.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_078550",
+  "start": 492880,
+  "end": 495568,
+  "kind": "tiles",
+  "file": "gfx/gfx_078550.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_078FF0",
+  "start": 495600,
+  "end": 498288,
+  "kind": "tiles",
+  "file": "gfx/gfx_078FF0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_079A90",
+  "start": 498320,
+  "end": 501008,
+  "kind": "tiles",
+  "file": "gfx/gfx_079A90.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_07A530",
+  "start": 501040,
+  "end": 503728,
+  "kind": "tiles",
+  "file": "gfx/gfx_07A530.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_07AFD0",
+  "start": 503760,
+  "end": 506448,
+  "kind": "tiles",
+  "file": "gfx/gfx_07AFD0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_0804D0",
+  "start": 525520,
+  "end": 528208,
+  "kind": "tiles",
+  "file": "gfx/gfx_0804D0.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "z80_gems_driver",
+  "start": 545918,
+  "end": 552159,
+  "kind": "bin",
+  "file": "sound/z80_gems_driver.bin",
+  "desc": "Z80 sound driver (GEMS), copied to Z80 RAM at boot"
+ },
+ {
+  "name": "gems_patches",
+  "start": 552160,
+  "end": 557269,
+  "kind": "bin",
+  "file": "sound/gems_patches.bin",
+  "desc": "GEMS instrument (patch) bank"
+ },
+ {
+  "name": "gems_envelopes",
+  "start": 557269,
+  "end": 557578,
+  "kind": "bin",
+  "file": "sound/gems_envelopes.bin",
+  "desc": "GEMS envelope bank"
+ },
+ {
+  "name": "gems_sequences",
+  "start": 557578,
+  "end": 622224,
+  "kind": "bin",
+  "file": "sound/gems_sequences.bin",
+  "desc": "GEMS sequence bank (all music and sound effects)"
+ },
+ {
+  "name": "gems_samples",
+  "start": 622224,
+  "end": 1799700,
+  "kind": "gems_samples",
+  "header": "sound/samples/header.bin",
+  "count": 90,
+  "segments": [
+   {
+    "offset": 1080,
+    "size": 1572,
+    "file": "sound/samples/seg_000438_s00.wav",
+    "samples": [
+     0
+    ]
+   },
+   {
+    "offset": 2652,
+    "size": 2896,
+    "file": "sound/samples/seg_000A5C_s01.wav",
+    "samples": [
+     1
+    ]
+   },
+   {
+    "offset": 5548,
+    "size": 4548,
+    "file": "sound/samples/seg_0015AC_s02.wav",
+    "samples": [
+     2
+    ]
+   },
+   {
+    "offset": 10096,
+    "size": 2258,
+    "file": "sound/samples/seg_002770_s03.wav",
+    "samples": [
+     3
+    ]
+   },
+   {
+    "offset": 12354,
+    "size": 15593,
+    "file": "sound/samples/seg_003042_s04.wav",
+    "samples": [
+     4
+    ]
+   },
+   {
+    "offset": 27947,
+    "size": 880,
+    "file": "sound/samples/seg_006D2B_s05.wav",
+    "samples": [
+     5
+    ]
+   },
+   {
+    "offset": 28827,
+    "size": 4142,
+    "file": "sound/samples/seg_00709B_s06.wav",
+    "samples": [
+     6
+    ]
+   },
+   {
+    "offset": 32969,
+    "size": 4054,
+    "file": "sound/samples/seg_0080C9_s07.wav",
+    "samples": [
+     7
+    ]
+   },
+   {
+    "offset": 37023,
+    "size": 3814,
+    "file": "sound/samples/seg_00909F_s08.wav",
+    "samples": [
+     8
+    ]
+   },
+   {
+    "offset": 40837,
+    "size": 4026,
+    "file": "sound/samples/seg_009F85_s09.wav",
+    "samples": [
+     9
+    ]
+   },
+   {
+    "offset": 44863,
+    "size": 7822,
+    "file": "sound/samples/seg_00AF3F_s0A.wav",
+    "samples": [
+     10
+    ]
+   },
+   {
+    "offset": 52685,
+    "size": 10630,
+    "file": "sound/samples/seg_00CDCD_s0B.wav",
+    "samples": [
+     11
+    ]
+   },
+   {
+    "offset": 63315,
+    "size": 9034,
+    "file": "sound/samples/seg_00F753_s0C.wav",
+    "samples": [
+     12
+    ]
+   },
+   {
+    "offset": 72349,
+    "size": 15819,
+    "file": "sound/samples/seg_011A9D_s0D.wav",
+    "samples": [
+     13
+    ]
+   },
+   {
+    "offset": 88168,
+    "size": 15822,
+    "file": "sound/samples/seg_015868_s0E.wav",
+    "samples": [
+     14
+    ]
+   },
+   {
+    "offset": 103990,
+    "size": 15591,
+    "file": "sound/samples/seg_019636_s0F.wav",
+    "samples": [
+     15
+    ]
+   },
+   {
+    "offset": 119581,
+    "size": 7722,
+    "file": "sound/samples/seg_01D31D_s10.wav",
+    "samples": [
+     16
+    ]
+   },
+   {
+    "offset": 127303,
+    "size": 15603,
+    "file": "sound/samples/seg_01F147_s11.wav",
+    "samples": [
+     17
+    ]
+   },
+   {
+    "offset": 142906,
+    "size": 7770,
+    "file": "sound/samples/seg_022E3A_s12.wav",
+    "samples": [
+     18
+    ]
+   },
+   {
+    "offset": 150676,
+    "size": 10921,
+    "file": "sound/samples/seg_024C94_s13.wav",
+    "samples": [
+     19
+    ]
+   },
+   {
+    "offset": 161597,
+    "size": 17266,
+    "file": "sound/samples/seg_02773D_s14.wav",
+    "samples": [
+     20
+    ]
+   },
+   {
+    "offset": 178863,
+    "size": 25693,
+    "file": "sound/samples/seg_02BAAF_s15.wav",
+    "samples": [
+     21
+    ]
+   },
+   {
+    "offset": 204556,
+    "size": 25331,
+    "file": "sound/samples/seg_031F0C_s16.wav",
+    "samples": [
+     22
+    ]
+   },
+   {
+    "offset": 229887,
+    "size": 19271,
+    "file": "sound/samples/seg_0381FF_s17.wav",
+    "samples": [
+     23
+    ]
+   },
+   {
+    "offset": 249158,
+    "size": 27855,
+    "file": "sound/samples/seg_03CD46_s18.wav",
+    "samples": [
+     24
+    ]
+   },
+   {
+    "offset": 277013,
+    "size": 20087,
+    "file": "sound/samples/seg_043A15_s19.wav",
+    "samples": [
+     25
+    ]
+   },
+   {
+    "offset": 297100,
+    "size": 19271,
+    "file": "sound/samples/seg_04888C_s1A.wav",
+    "samples": [
+     26
+    ]
+   },
+   {
+    "offset": 316371,
+    "size": 27855,
+    "file": "sound/samples/seg_04D3D3_s1B.wav",
+    "samples": [
+     27
+    ]
+   },
+   {
+    "offset": 344226,
+    "size": 16008,
+    "file": "sound/samples/seg_0540A2_s1C.wav",
+    "samples": [
+     28
+    ]
+   },
+   {
+    "offset": 360234,
+    "size": 14764,
+    "file": "sound/samples/seg_057F2A_s1D.wav",
+    "samples": [
+     29
+    ]
+   },
+   {
+    "offset": 374998,
+    "size": 27837,
+    "file": "sound/samples/seg_05B8D6_s1E.wav",
+    "samples": [
+     30
+    ]
+   },
+   {
+    "offset": 402835,
+    "size": 11835,
+    "file": "sound/samples/seg_062593_s1F.wav",
+    "samples": [
+     31
+    ]
+   },
+   {
+    "offset": 414670,
+    "size": 23941,
+    "file": "sound/samples/seg_0653CE_s20.wav",
+    "samples": [
+     32
+    ]
+   },
+   {
+    "offset": 438611,
+    "size": 25940,
+    "file": "sound/samples/seg_06B153_s21.wav",
+    "samples": [
+     33
+    ]
+   },
+   {
+    "offset": 464551,
+    "size": 16536,
+    "file": "sound/samples/seg_0716A7_s22.wav",
+    "samples": [
+     34
+    ]
+   },
+   {
+    "offset": 481087,
+    "size": 8704,
+    "file": "sound/samples/seg_07573F_s23.wav",
+    "samples": [
+     35
+    ]
+   },
+   {
+    "offset": 489791,
+    "size": 15610,
+    "file": "sound/samples/seg_07793F_s24.wav",
+    "samples": [
+     36
+    ]
+   },
+   {
+    "offset": 505401,
+    "size": 6185,
+    "file": "sound/samples/seg_07B639_s25.wav",
+    "samples": [
+     37
+    ]
+   },
+   {
+    "offset": 511586,
+    "size": 4180,
+    "file": "sound/samples/seg_07CE62_s26.wav",
+    "samples": [
+     38
+    ]
+   },
+   {
+    "offset": 515766,
+    "size": 6962,
+    "file": "sound/samples/seg_07DEB6_s27.wav",
+    "samples": [
+     39
+    ]
+   },
+   {
+    "offset": 522728,
+    "size": 15582,
+    "file": "sound/samples/seg_07F9E8_s28.wav",
+    "samples": [
+     40
+    ]
+   },
+   {
+    "offset": 538310,
+    "size": 11718,
+    "file": "sound/samples/seg_0836C6_s29.wav",
+    "samples": [
+     41
+    ]
+   },
+   {
+    "offset": 550028,
+    "size": 10917,
+    "file": "sound/samples/seg_08648C_s2A.wav",
+    "samples": [
+     42
+    ]
+   },
+   {
+    "offset": 560945,
+    "size": 15596,
+    "file": "sound/samples/seg_088F31_s2B.wav",
+    "samples": [
+     43
+    ]
+   },
+   {
+    "offset": 576541,
+    "size": 2608,
+    "file": "sound/samples/seg_08CC1D_s2C.wav",
+    "samples": [
+     44
+    ]
+   },
+   {
+    "offset": 579149,
+    "size": 5796,
+    "file": "sound/samples/seg_08D64D_s2D.wav",
+    "samples": [
+     45
+    ]
+   },
+   {
+    "offset": 584945,
+    "size": 16873,
+    "file": "sound/samples/seg_08ECF1_s2E.wav",
+    "samples": [
+     46
+    ]
+   },
+   {
+    "offset": 601818,
+    "size": 7722,
+    "file": "sound/samples/seg_092EDA_s2F.wav",
+    "samples": [
+     47
+    ]
+   },
+   {
+    "offset": 609540,
+    "size": 6458,
+    "file": "sound/samples/seg_094D04_s30.wav",
+    "samples": [
+     48
+    ]
+   },
+   {
+    "offset": 615998,
+    "size": 8812,
+    "file": "sound/samples/seg_09663E_s31.wav",
+    "samples": [
+     49
+    ]
+   },
+   {
+    "offset": 624810,
+    "size": 9034,
+    "file": "sound/samples/seg_0988AA_s32.wav",
+    "samples": [
+     50
+    ]
+   },
+   {
+    "offset": 633844,
+    "size": 9750,
+    "file": "sound/samples/seg_09ABF4_s33.wav",
+    "samples": [
+     51
+    ]
+   },
+   {
+    "offset": 643594,
+    "size": 8296,
+    "file": "sound/samples/seg_09D20A_s34.wav",
+    "samples": [
+     52
+    ]
+   },
+   {
+    "offset": 651890,
+    "size": 19475,
+    "file": "sound/samples/seg_09F272_s35.wav",
+    "samples": [
+     53
+    ]
+   },
+   {
+    "offset": 671365,
+    "size": 16257,
+    "file": "sound/samples/seg_0A3E85_s36.wav",
+    "samples": [
+     54
+    ]
+   },
+   {
+    "offset": 687622,
+    "size": 13825,
+    "file": "sound/samples/seg_0A7E06_s37.wav",
+    "samples": [
+     55
+    ]
+   },
+   {
+    "offset": 701447,
+    "size": 1104,
+    "file": "sound/samples/seg_0AB407_s38.wav",
+    "samples": [
+     56
+    ]
+   },
+   {
+    "offset": 702551,
+    "size": 1974,
+    "file": "sound/samples/seg_0AB857_s39.wav",
+    "samples": [
+     57
+    ]
+   },
+   {
+    "offset": 704525,
+    "size": 5876,
+    "file": "sound/samples/seg_0AC00D_s3A.wav",
+    "samples": [
+     58
+    ]
+   },
+   {
+    "offset": 710401,
+    "size": 19002,
+    "file": "sound/samples/seg_0AD701_s3B.wav",
+    "samples": [
+     59
+    ]
+   },
+   {
+    "offset": 729403,
+    "size": 1318,
+    "file": "sound/samples/seg_0B213B_s3C.wav",
+    "samples": [
+     60
+    ]
+   },
+   {
+    "offset": 730721,
+    "size": 2516,
+    "file": "sound/samples/seg_0B2661_s3D.wav",
+    "samples": [
+     61
+    ]
+   },
+   {
+    "offset": 733237,
+    "size": 4072,
+    "file": "sound/samples/seg_0B3035_s3E.wav",
+    "samples": [
+     62
+    ]
+   },
+   {
+    "offset": 737309,
+    "size": 618,
+    "file": "sound/samples/seg_0B401D_s3F.wav",
+    "samples": [
+     63
+    ]
+   },
+   {
+    "offset": 737927,
+    "size": 3516,
+    "file": "sound/samples/seg_0B4287_s40.wav",
+    "samples": [
+     64
+    ]
+   },
+   {
+    "offset": 741443,
+    "size": 2728,
+    "file": "sound/samples/seg_0B5043_s41.wav",
+    "samples": [
+     65
+    ]
+   },
+   {
+    "offset": 744171,
+    "size": 2104,
+    "file": "sound/samples/seg_0B5AEB_s42.wav",
+    "samples": [
+     66
+    ]
+   },
+   {
+    "offset": 746275,
+    "size": 1984,
+    "file": "sound/samples/seg_0B6323_s43.wav",
+    "samples": [
+     67
+    ]
+   },
+   {
+    "offset": 748259,
+    "size": 16869,
+    "file": "sound/samples/seg_0B6AE3_s44.wav",
+    "samples": [
+     68
+    ]
+   },
+   {
+    "offset": 765128,
+    "size": 25306,
+    "file": "sound/samples/seg_0BACC8_s45.wav",
+    "samples": [
+     69
+    ]
+   },
+   {
+    "offset": 790434,
+    "size": 18983,
+    "file": "sound/samples/seg_0C0FA2_s46.wav",
+    "samples": [
+     70
+    ]
+   },
+   {
+    "offset": 809417,
+    "size": 17924,
+    "file": "sound/samples/seg_0C59C9_s47.wav",
+    "samples": [
+     71
+    ]
+   },
+   {
+    "offset": 827341,
+    "size": 22144,
+    "file": "sound/samples/seg_0C9FCD_s48.wav",
+    "samples": [
+     72
+    ]
+   },
+   {
+    "offset": 849485,
+    "size": 15816,
+    "file": "sound/samples/seg_0CF64D_s49.wav",
+    "samples": [
+     73
+    ]
+   },
+   {
+    "offset": 865301,
+    "size": 15538,
+    "file": "sound/samples/seg_0D3415_s4A.wav",
+    "samples": [
+     74
+    ]
+   },
+   {
+    "offset": 880839,
+    "size": 1,
+    "file": "sound/samples/seg_0D70C7_s4B.wav",
+    "samples": [
+     75
+    ]
+   },
+   {
+    "offset": 880840,
+    "size": 13687,
+    "file": "sound/samples/seg_0D70C8_s4C.wav",
+    "samples": [
+     76
+    ]
+   },
+   {
+    "offset": 894527,
+    "size": 25990,
+    "file": "sound/samples/seg_0DA63F_s4D.wav",
+    "samples": [
+     77
+    ]
+   },
+   {
+    "offset": 920517,
+    "size": 25990,
+    "file": "sound/samples/seg_0E0BC5_s4E.wav",
+    "samples": [
+     78
+    ]
+   },
+   {
+    "offset": 946507,
+    "size": 25990,
+    "file": "sound/samples/seg_0E714B_s4F.wav",
+    "samples": [
+     79
+    ]
+   },
+   {
+    "offset": 972497,
+    "size": 25990,
+    "file": "sound/samples/seg_0ED6D1_s50.wav",
+    "samples": [
+     80
+    ]
+   },
+   {
+    "offset": 998487,
+    "size": 25990,
+    "file": "sound/samples/seg_0F3C57_s51.wav",
+    "samples": [
+     81
+    ]
+   },
+   {
+    "offset": 1024477,
+    "size": 25990,
+    "file": "sound/samples/seg_0FA1DD_s52.wav",
+    "samples": [
+     82
+    ]
+   },
+   {
+    "offset": 1050467,
+    "size": 13510,
+    "file": "sound/samples/seg_100763_s53.wav",
+    "samples": [
+     83
+    ]
+   },
+   {
+    "offset": 1063977,
+    "size": 15836,
+    "file": "sound/samples/seg_103C29_s54.wav",
+    "samples": [
+     84
+    ]
+   },
+   {
+    "offset": 1079813,
+    "size": 12397,
+    "file": "sound/samples/seg_107A05_s55.wav",
+    "samples": [
+     85
+    ]
+   },
+   {
+    "offset": 1092210,
+    "size": 16446,
+    "file": "sound/samples/seg_10AA72_s56.wav",
+    "samples": [
+     86
+    ]
+   },
+   {
+    "offset": 1108656,
+    "size": 24116,
+    "file": "sound/samples/seg_10EAB0_s57.wav",
+    "samples": [
+     87
+    ]
+   },
+   {
+    "offset": 1132772,
+    "size": 17678,
+    "file": "sound/samples/seg_1148E4_s58.wav",
+    "samples": [
+     88
+    ]
+   },
+   {
+    "offset": 1150450,
+    "size": 27026,
+    "file": "sound/samples/seg_118DF2_s59.wav",
+    "samples": [
+     89
+    ]
+   }
+  ],
+  "desc": "GEMS DAC sample bank: 12-byte headers (flags, start24, skip, len, loop, end; little endian) + 8-bit PCM"
+ },
+ {
+  "name": "gems2_patches",
+  "start": 1799700,
+  "end": 1800305,
+  "kind": "bin",
+  "file": "sound/gems2_patches.bin",
+  "desc": "GEMS instrument bank (rebuild: extra music set)"
+ },
+ {
+  "name": "gems2_envelopes",
+  "start": 1800305,
+  "end": 1800338,
+  "kind": "bin",
+  "file": "sound/gems2_envelopes.bin",
+  "desc": "GEMS envelope bank (rebuild: extra music set)"
+ },
+ {
+  "name": "gems2_sequences",
+  "start": 1800338,
+  "end": 1802620,
+  "kind": "bin",
+  "file": "sound/gems2_sequences.bin",
+  "desc": "GEMS sequence bank (rebuild: extra music set)"
+ },
+ {
+  "name": "gems2_samples",
+  "start": 1802620,
+  "end": 1833344,
+  "kind": "gems_samples",
+  "header": "sound/samples2/header.bin",
+  "count": 5,
+  "segments": [
+   {
+    "offset": 60,
+    "size": 1572,
+    "file": "sound/samples2/seg_00003C_s00.wav",
+    "samples": [
+     0
+    ]
+   },
+   {
+    "offset": 1632,
+    "size": 2896,
+    "file": "sound/samples2/seg_000660_s01.wav",
+    "samples": [
+     1
+    ]
+   },
+   {
+    "offset": 4528,
+    "size": 5876,
+    "file": "sound/samples2/seg_0011B0_s02.wav",
+    "samples": [
+     2
+    ]
+   },
+   {
+    "offset": 10404,
+    "size": 19002,
+    "file": "sound/samples2/seg_0028A4_s03.wav",
+    "samples": [
+     3
+    ]
+   },
+   {
+    "offset": 29406,
+    "size": 1318,
+    "file": "sound/samples2/seg_0072DE_s04.wav",
+    "samples": [
+     4
+    ]
+   }
+  ],
+  "desc": "GEMS DAC sample bank: 12-byte headers (flags, start24, skip, len, loop, end; little endian) + 8-bit PCM"
+ },
+ {
+  "name": "gfx_1BFCA2",
+  "start": 1834146,
+  "end": 1864354,
+  "kind": "tiles",
+  "file": "gfx/gfx_1BFCA2.png",
+  "palette_known": true,
+  "width_tiles": 3
+ },
+ {
+  "name": "gfx_1C9C8C",
+  "start": 1875084,
+  "end": 1875404,
+  "kind": "tiles",
+  "file": "gfx/gfx_1C9C8C.png",
+  "palette_known": false,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1CD7CC",
+  "start": 1890252,
+  "end": 1891116,
+  "kind": "tiles",
+  "file": "gfx/gfx_1CD7CC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1CE88C",
+  "start": 1894540,
+  "end": 1896300,
+  "kind": "tiles",
+  "file": "gfx/gfx_1CE88C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1CEFAC",
+  "start": 1896364,
+  "end": 1899116,
+  "kind": "tiles",
+  "file": "gfx/gfx_1CEFAC.png",
+  "palette_known": false,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D000C",
+  "start": 1900556,
+  "end": 1903180,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D000C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D0A4C",
+  "start": 1903180,
+  "end": 1903564,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D0A4C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D0BCC",
+  "start": 1903564,
+  "end": 1903948,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D0BCC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D0D4C",
+  "start": 1903948,
+  "end": 1904716,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D0D4C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D104C",
+  "start": 1904716,
+  "end": 1905228,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D104C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D124C",
+  "start": 1905228,
+  "end": 1905484,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D124C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D134C",
+  "start": 1905484,
+  "end": 1905612,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D134C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D13CC",
+  "start": 1905612,
+  "end": 1905740,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D13CC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D144C",
+  "start": 1905740,
+  "end": 1905868,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D144C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D1E4C",
+  "start": 1908300,
+  "end": 1908460,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D1E4C.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D1EEC",
+  "start": 1908460,
+  "end": 1914092,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D1EEC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1D34EC",
+  "start": 1914092,
+  "end": 1914604,
+  "kind": "tiles",
+  "file": "gfx/gfx_1D34EC.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_1E2A5E",
+  "start": 1976926,
+  "end": 1996094,
+  "kind": "tiles",
+  "file": "gfx/gfx_1E2A5E.png",
+  "palette_known": true,
+  "width_tiles": 8
+ },
+ {
+  "name": "gfx_1E753E",
+  "start": 1996094,
+  "end": 2021630,
+  "kind": "tiles",
+  "file": "gfx/gfx_1E753E.png",
+  "palette_known": true,
+  "width_tiles": 12
+ },
+ {
+  "name": "gfx_1F095E",
+  "start": 2034014,
+  "end": 2057150,
+  "kind": "tiles",
+  "file": "gfx/gfx_1F095E.png",
+  "palette_known": true,
+  "width_tiles": 15
+ },
+ {
+  "name": "gfx_1F63BE",
+  "start": 2057150,
+  "end": 2067710,
+  "kind": "tiles",
+  "file": "gfx/gfx_1F63BE.png",
+  "palette_known": true,
+  "width_tiles": 34
+ },
+ {
+  "name": "gfx_1F8CFE",
+  "start": 2067710,
+  "end": 2083070,
+  "kind": "tiles",
+  "file": "gfx/gfx_1F8CFE.png",
+  "palette_known": true,
+  "width_tiles": 3
+ },
+ {
+  "name": "gfx_1FC8FE",
+  "start": 2083070,
+  "end": 2099454,
+  "kind": "tiles",
+  "file": "gfx/gfx_1FC8FE.png",
+  "palette_known": true,
+  "width_tiles": 3
+ },
+ {
+  "name": "gfx_21519E",
+  "start": 2183582,
+  "end": 2193182,
+  "kind": "tiles",
+  "file": "gfx/gfx_21519E.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_21819E",
+  "start": 2195870,
+  "end": 2199134,
+  "kind": "tiles",
+  "file": "gfx/gfx_21819E.png",
+  "palette_known": true,
+  "width_tiles": 16
+ },
+ {
+  "name": "gfx_21ABDE",
+  "start": 2206686,
+  "end": 2209278,
+  "kind": "tiles",
+  "file": "gfx/gfx_21ABDE.png",
+  "palette_known": true,
+  "width_tiles": 16
+ }
+]
