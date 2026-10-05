@@ -120,7 +120,41 @@ build/nm/dune2.gen: build/nm/dune2.elf
 
 nonmatching: build/nm/dune2.gen
 
-clean:
-	rm -rf build/obj build/mod build/modw build/nm build/wide build/assets build/dune2.elf build/dune2.gen
+# ---- injectable mouse / multi-select payload for third-party R82c-based ROMs
+# (tools/modpatch.py applies it to any code-compatible mod ROM; docs/MODPATCH.md)
+PD := build/payload
+PAYLOAD_BASE ?= $(shell [ -f baserom.gen ] && stat -c %s baserom.gen || echo 0)
 
-.PHONY: setup all check wide check-wide mod nonmatching clean
+$(PD)/.gen: tools/payload.py tools/disasm/config.py tools/disasm/names.py tools/disasm/csig.py src/c/dune2.h src/c/mods.h src/c/input.c src/c/group.c
+	@mkdir -p $(PD)
+	PAYLOAD_BASE=$(PAYLOAD_BASE) python3 tools/payload.py gen $(PD)
+	@touch $@
+
+$(PD)/payload.s $(PD)/payload.ld $(PD)/hooks.tpl.json: $(PD)/.gen ;
+
+$(PD)/payload.o: $(PD)/payload.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+$(PD)/input.o: src/c/input.c src/c/dune2.h src/c/mods.h
+	$(CC) $(CFLAGS) -DMODS=1 -DWIDE=0 -DAUTOPLAY=0 -c -o $@ $<
+
+$(PD)/group.o: src/c/group.c src/c/dune2.h src/c/mods.h
+	$(CC) $(CFLAGS) -DMODS=1 -DWIDE=0 -DAUTOPLAY=0 -c -o $@ $<
+
+$(PD)/payload.elf: $(PD)/payload.o $(PD)/input.o $(PD)/group.o $(PD)/payload.ld
+	$(LD) -T $(PD)/payload.ld -o $@ $(filter %.o,$^)
+
+$(PD)/payload.bin: $(PD)/payload.elf
+	$(OBJCOPY) -O binary -j .text $< $@
+
+# also writes $(PD)/payload.info.json
+$(PD)/hooks.json: $(PD)/payload.elf $(PD)/hooks.tpl.json tools/payload.py
+	python3 tools/payload.py postlink $(PD)/payload.elf $(PD)
+
+payload: $(PD)/payload.bin $(PD)/hooks.json
+	@echo "payload ready: tools/modpatch.py <mod-rom>.gen  (see docs/MODPATCH.md)"
+
+clean:
+	rm -rf build/obj build/mod build/modw build/nm build/wide build/assets build/payload build/dune2.elf build/dune2.gen
+
+.PHONY: setup all check wide check-wide mod nonmatching payload clean

@@ -58,6 +58,20 @@ Mouse controls:
 - right click cancels; middle click is C;
 - double click on a unit selects all on-screen units of that type; triple click selects the whole class.
 
+## Adding mouse + selection box to an existing mod ROM
+
+Most Dune II mods are data edits of the same R82c base, so the mouse and the
+selection box can be injected into any of them, keeping the mod's content
+byte-for-byte:
+
+```sh
+make payload
+tools/modpatch.py SOME_MOD.gen          # -> SOME_MOD_mouse.gen
+```
+
+Compatibility with the base ROM is verified first (hook sites and called
+routines); see [`docs/MODPATCH.md`](docs/MODPATCH.md).
+
 ## How to bulid this by hand without running the scripts
 
 Please read the scripts referenced above with your eyeballs and repeat the steps manually via keyboard.
@@ -65,4 +79,4 @@ Please read the scripts referenced above with your eyeballs and repeat the steps
 ## More
 
 - [`docs/TECHNICAL.md`](docs/TECHNICAL.md): layout, build switches, the C interface, test tools.
-- [`docs/DEVNOTES.md`](DEVNOTES.md): history, plans, pitfalls, and the Windows-port outlook.
+- [`docs/DEVNOTES.md`](docs/DEVNOTES.md): history, plans, pitfalls, and the Windows-port outlook.
