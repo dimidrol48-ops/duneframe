@@ -192,7 +192,7 @@ def main():
 
     baserom = baserom_bytes()                     # the clean R82c base, sha1-checked
     hooks, info, blob = load_payload(pdir)
-    modrom = open(modrom_path, 'rb').read()
+    modrom = bytearray(open(modrom_path, 'rb').read())   # patch() mutates it in place
     if len(modrom) != len(baserom):
         sys.exit('modpatch: %s is %d bytes, baserom.gen is %d - not the same base'
                  % (modrom_path, len(modrom), len(baserom)))
